@@ -1,0 +1,12 @@
+bundle:
+  name: apex_pipeline
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://adb-7405618848277996.16.azuredatabricks.net

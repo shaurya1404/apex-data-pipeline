@@ -1,0 +1,14 @@
+resources:
+  pipelines:
+    apex_ingestion:
+      name: apex_ingestion
+      libraries:
+        - glob:
+            include: ../transformations/**
+      catalog: apex
+      channel: CURRENT
+      continuous: false
+      photon: true
+      root_path: ..
+      schema: bronze
+      serverless: true
