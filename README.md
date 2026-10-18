@@ -179,7 +179,7 @@ GROUP BY g.place_name
 ORDER BY total_check_ins DESC
 ```
 
-![Busiest Gyms Query Output](/apex-data-pipeline/docs/images/busiest_gyms.png)
+![Busiest Gyms Query Output](docs/images/busiest_gyms.png)
 
 **Daily active users**
 
@@ -191,7 +191,7 @@ GROUP BY event_date_utc
 ORDER BY event_date_utc;
 ```
 
-![Daily Active Users Query Output](/apex-data-pipeline/docs/images/daily_active_users.png)
+![Daily Active Users Query Output](docs/images/daily_active_users.png)
 
 **Muscle groups ranked based on popularity**
 
@@ -204,7 +204,7 @@ GROUP BY explode(w.muscle_groups)
 ORDER BY times_started DESC;
 ```
 
-![Most Popular Muscles Query Output](/apex-data-pipeline/docs/images/popular_muscle_groups.png)
+![Most Popular Muscles Query Output](docs/images/popular_muscle_groups.png)
 
 
 ---
