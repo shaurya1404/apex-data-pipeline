@@ -168,17 +168,6 @@ Validation queries run after each change check, among other things, that silver 
 
 ## Example questions the star schema answers
 
-**Most popular muscle groups trained**
-
-```sql
-SELECT w.muscle_groups, count(*) AS times_started
-FROM apex.gold.fact_events f
-JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
-WHERE f.event_name = 'workout_started'
-GROUP BY w.muscle_groups
-ORDER BY times_started DESC;
-```
-
 **Busiest gyms by check-ins**
 
 ```sql
@@ -190,6 +179,8 @@ GROUP BY g.place_name
 ORDER BY total_check_ins DESC
 ```
 
+![Busiest Gyms Query Output](/apex-data-pipeline/docs/images/busiest_gyms.png)
+
 **Daily active users**
 
 ```sql
@@ -199,6 +190,22 @@ WHERE user_id IS NOT NULL
 GROUP BY event_date_utc
 ORDER BY event_date_utc;
 ```
+
+![Daily Active Users Query Output](/apex-data-pipeline/docs/images/daily_active_users.png)
+
+**Muscle groups ranked based on popularity**
+
+```sql
+SELECT explode(w.muscle_groups), count(*) AS times_started
+FROM apex.gold.fact_events f
+JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
+WHERE f.event_name = 'workout_started'
+GROUP BY explode(w.muscle_groups)
+ORDER BY times_started DESC;
+```
+
+![Most Popular Muscles Query Output](/apex-data-pipeline/docs/images/popular_muscle_groups.png)
+
 
 ---
 
