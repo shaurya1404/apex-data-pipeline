@@ -1,10 +1,4 @@
-
--- Batch: Audit PostHog's default schema for Batch exports
-SELECT *
-FROM apex.bronze.batch_events
-LIMIT 5;
-
--- Batch: every landing file row is in bronze (the two will be equal AFTER a recent pipeline run)
+-- Bronze Batch: every landing file row is in bronze (the two will be equal AFTER a recent pipeline run)
 SELECT
   (SELECT count(*)
    FROM read_files(
@@ -15,25 +9,32 @@ SELECT
    )) AS landing_rows,
   (SELECT count(*) FROM apex.bronze.batch_events) AS bronze_rows;
 
--- Batch: no file loaded twice (expect no rows)
+
+-- Bronze Batch: no file loaded twice (expect no rows)
 SELECT _source_file, count(DISTINCT _ingested_at) AS loads
 FROM apex.bronze.batch_events
 GROUP BY _source_file
 HAVING count(DISTINCT _ingested_at) > 1;
 
--- Stream: no message stored twice (expect no rows)
+-- Bronze Stream: no message stored twice (expect no rows)
 SELECT partition, offset, count(*)
 FROM apex.bronze.stream_events
 GROUP BY partition, offset
 HAVING count(*) > 1;
 
--- Events: Batch events won whenever they're available
+-- Bronze -> Silver: Total Events Merged (AUTO CDC) and excluded (EXCLUDED_EVENTS) = 18%
+SELECT
+  (SELECT count(*) FROM apex.silver.events) AS silver,
+  (SELECT count(*) FROM apex.bronze.batch_events) AS bronze_batch,
+  (SELECT count(*) FROM apex.bronze.stream_events) AS bronze_stream;
+
+-- Silver Events: Batch events won whenever they're available
 SELECT e.source, count(*)
 FROM apex.silver.events e
 JOIN apex.bronze.batch_events b USING (uuid)
 GROUP BY e.source;
 
--- Dimension: No data loss
+-- Silver Dimension: No data loss
 SELECT 'users' AS t,
        (SELECT count(*) FROM apex.bronze.users) AS expected,
        (SELECT count(*) FROM apex.silver.users) AS actual
