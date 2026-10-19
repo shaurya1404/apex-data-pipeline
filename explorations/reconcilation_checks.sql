@@ -46,4 +46,3 @@ UNION ALL
 SELECT 'gyms',
        (SELECT count(*) + count(secondary_place_id) FROM apex.bronze.gyms),
        (SELECT count(*) FROM apex.silver.gyms);
-       (SELECT count(*) FROM apex.silver.gyms);
