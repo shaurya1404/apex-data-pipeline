@@ -252,5 +252,5 @@ No secrets are stored in this repository. The Event Hubs credentials are read fr
 
 ## Limitations and future work
 
-- **Workout matching by name.** Events carry a workout name, not an ID. When a user has two workouts with the same name, the most recently updated one is chosen. Adding `workout_id` and `gym_id` to the app's events would make these joins exact.
+- **Workout matching by name.** Events carry a workout name, not an ID. When a user has two workouts with the same name, the most recently updated one is chosen. Adding `workout_id` to the app's events would make these joins exact.
 - **No receive time for batch rows.** PostHog's export doesn't provide a reliable receive time, so `captured_at` is null for batch events.
