@@ -8,7 +8,7 @@ from pyspark.sql.window import Window
     name='apex.gold.fact_events',
     comment='One row per app event.'
 )
-@dp.expect('identified_events_have_users', 'NOT coalesce(is_identified, false) OR user_id IS NOT NULL')
+@dp.expect('identified_events_have_users', '(NOT coalesce(is_identified, false)) OR user_id IS NOT NULL')
 def fact_events():
     events = spark.read.table("apex.silver.events")
 
