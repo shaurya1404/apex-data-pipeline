@@ -196,12 +196,16 @@ ORDER BY event_date_utc;
 **Muscle groups ranked based on popularity**
 
 ```sql
-SELECT explode(w.muscle_groups), count(*) AS times_started
-FROM apex.gold.fact_events f
-JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
-WHERE f.event_name = 'workout_started'
-GROUP BY explode(w.muscle_groups)
-ORDER BY times_started DESC;
+WITH exploded AS (
+    SELECT explode(w.muscle_groups) AS muscle_group
+    FROM apex.gold.fact_events f
+    JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
+    WHERE f.event_name = 'workout_started'
+)
+SELECT muscle_group, COUNT(*) AS total_workouts
+FROM exploded
+GROUP BY muscle_group
+ORDER BY total_workouts DESC
 ```
 
 ![Most Popular Muscles Query Output](docs/images/popular_muscle_groups.png)
