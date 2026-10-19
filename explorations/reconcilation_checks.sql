@@ -1,3 +1,4 @@
+
 -- Batch: Audit PostHog's default schema for Batch exports
 SELECT *
 FROM apex.bronze.batch_events

@@ -196,12 +196,16 @@ ORDER BY event_date_utc;
 **Muscle groups ranked based on popularity**
 
 ```sql
-SELECT explode(w.muscle_groups), count(*) AS times_started
-FROM apex.gold.fact_events f
-JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
-WHERE f.event_name = 'workout_started'
-GROUP BY explode(w.muscle_groups)
-ORDER BY times_started DESC;
+WITH exploded AS (
+    SELECT explode(w.muscle_groups) AS muscle_group
+    FROM apex.gold.fact_events f
+    JOIN apex.silver.workouts w ON f.workout_id = w.workout_id
+    WHERE f.event_name = 'workout_started'
+)
+SELECT muscle_group, COUNT(*) AS total_workouts
+FROM exploded
+GROUP BY muscle_group
+ORDER BY total_workouts DESC
 ```
 
 ![Most Popular Muscles Query Output](docs/images/popular_muscle_groups.png)
@@ -252,5 +256,5 @@ No secrets are stored in this repository. The Event Hubs credentials are read fr
 
 ## Limitations and future work
 
-- **Workout matching by name.** Events carry a workout name, not an ID. When a user has two workouts with the same name, the most recently updated one is chosen. Adding `workout_id` and `gym_id` to the app's events would make these joins exact.
+- **Workout matching by name.** Events carry a workout name, not an ID. When a user has two workouts with the same name, the most recently updated one is chosen. Adding `workout_id` to the app's events would make these joins exact.
 - **No receive time for batch rows.** PostHog's export doesn't provide a reliable receive time, so `captured_at` is null for batch events.
